@@ -33,3 +33,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Produced by the 'flatten-maven-plugin'
+.flattened-pom.xml
