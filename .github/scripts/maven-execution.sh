@@ -35,6 +35,7 @@ fi
 
 # Execute maven
 set -x
+echo "executing mvn"
 mvn \
   --show-version \
   --batch-mode \
@@ -43,3 +44,5 @@ mvn \
   "$mvn_profiles_active" \
   $mvn_phase
 
+
+echo "End executing mvn"
