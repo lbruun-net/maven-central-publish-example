@@ -6,12 +6,17 @@
 
     <groupId>net.lbruun.tests</groupId>
     <artifactId>maven-central-publish-example</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}${sha1}${changelist}</version> <!-- never change this -->
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Some sensible defaults for local development -->
+        <revision/>
+        <changelist>LATEST-SNAPSHOT</changelist> <!-- only used when executing Maven locally -->
+        <sha1/>
     </properties>
 
 
@@ -33,6 +38,35 @@
             <id>release-to-central</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <version>1.2.5</version>
+                        <configuration>
+                            <flattenMode>ossrh</flattenMode>
+                        </configuration>
+                        <executions>
+                            <!-- enable flattening -->
+                            <execution>
+                                <id>flatten</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>flatten</goal>
+                                </goals>
+                            </execution>
+                            <!-- ensure proper cleanup -->
+                            <execution>
+                                <id>flatten.clean</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
