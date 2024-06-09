@@ -64,10 +64,14 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
 fi
 
 # Execute maven
+#   - 'deployAtEnd':  For multi-module builds this is important. We either want to deploy
+#                     all modules or none. (i.e. the deploy should ideally be one atomic action)
 mvn \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
+  -DinstallAtEnd=true \
+  -DdeployAtEnd=true \
   -DaltReleaseDeploymentRepository=maven-central::$mvn_central_release_url \
   -DaltSnapshotDeploymentRepository=maven-central::$mvn_central_snapshot_url \
   -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision  $mvn_profiles_active \
