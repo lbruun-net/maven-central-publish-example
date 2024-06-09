@@ -57,7 +57,7 @@ fi
 # Execute maven
 set -x
 echo "executing mvn"
-mvn \
+mvn -X \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
