@@ -20,6 +20,7 @@
   </properties>
 
 
+  <!--
   <distributionManagement>
     <snapshotRepository>
       <id>maven-central</id>
@@ -30,6 +31,7 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
+  -->
 
 
   <build>
@@ -68,7 +70,6 @@
       <id>release-to-central</id>
       <build>
         <plugins>
-
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
@@ -119,6 +120,5 @@
       </build>
     </profile>
   </profiles>
-
 
 </project>
