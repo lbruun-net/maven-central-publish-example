@@ -40,7 +40,7 @@
   </developers>
 
 
-  <!-- This section not used in the deploy process, but is required to exist for
+  <!-- This section not used in the deploy/release process, but is required to exist for
        publishing to Maven Central.                                                -->
   <scm>
     <connection>scm:git:https://github.com/lbruun-net/maven-central-publish-example.git</connection>
