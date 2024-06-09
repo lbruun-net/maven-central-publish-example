@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: To Be Removed
+        run: printenv
+
       - name: Set up Java and Maven
         uses: actions/setup-java@v4
         with:
