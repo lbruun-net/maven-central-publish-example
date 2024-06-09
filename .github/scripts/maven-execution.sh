@@ -61,8 +61,8 @@ mvn -X \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
-  -DaltReleaseDeploymentRepository=maven-central::https://oss.sonatype.org/service/local/staging/deploy/maven2 \
-  -DaltSnapshotDeploymentRepository=maven-central::https://oss.sonatype.org/content/repositories/snapshots \
+  -DaltReleaseDeploymentRepository=maven-central::https://oss.sonatype.org/service/local/staging/deploy/maven2/ \
+  -DaltSnapshotDeploymentRepository=maven-central::https://oss.sonatype.org/content/repositories/snapshots/ \
   -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision  $mvn_profiles_active \
   $mvn_phase
 
