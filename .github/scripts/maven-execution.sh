@@ -9,6 +9,7 @@
 
 set -e
 
+printenv
 
 # Defaults
 mvn_phase="verify"
@@ -18,11 +19,11 @@ mvn_ci_changelist=""
 mvn_profiles_active=""
 
 # SemVer regular expression:
-#  - The tag can optionally start with the 'v' but the 'v' doesn't become part of the
-#    Maven version string.
+#  - The tag can optionally start with the 'v' but the 'v' doesn't become part of
+#    the Maven version string.
 # -  We allow the X.Y.Z version to have a pre-release suffix, e.g. "3.2.0-RC1" but if
 #    so we tell Maven that this is a SNAPSHOT release. In other words: tag "3.2.0-RC1" will
-#    be published as "3.2.0-RC1-SNAPSHOT" and will therefore go into the snapshot repo,
+#    be published as "3.2.0-RC1-SNAPSHOT" and will therefore go into the OSSRH snapshot repo,
 #    not Maven Central.
 #
 semver_regex='^v?([0-9]+\.[0-9]+\.[0-9]+(\-[0-9a-zA-Z.]+)*)$'
@@ -55,9 +56,7 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
 fi
 
 # Execute maven
-set -x
-echo "executing mvn"
-mvn -X \
+mvn \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
