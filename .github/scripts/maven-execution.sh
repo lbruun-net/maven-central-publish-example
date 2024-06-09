@@ -4,12 +4,20 @@
 #  The POM is expected to use the "Maven CI Friendly" paradigm.
 #  (https://maven.apache.org/maven-ci-friendly.html)
 #
-#
+#  'mvn verify' will be executed by default. However, if executing from a SemVer-like tag
+#  then 'mvn deploy' is executed instead.
 #
 
 set -e
 
-printenv
+
+
+# Constants
+# (Note: Projects which has registered with Sonatype/MavenCentral after February 2021 use
+#        "s01.oss.sonatype.org" as the hostname in the URLs below. Change accordingly.)
+mvn_central_release_url="https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+mvn_central_snapshot_url="https://oss.sonatype.org/content/repositories/snapshots/"
+
 
 # Defaults
 mvn_phase="verify"
@@ -23,7 +31,7 @@ mvn_profiles_active=""
 #    the Maven version string.
 # -  We allow the X.Y.Z version to have a pre-release suffix, e.g. "3.2.0-RC1" but if
 #    so we tell Maven that this is a SNAPSHOT release. In other words: tag "3.2.0-RC1" will
-#    be published as "3.2.0-RC1-SNAPSHOT" and will therefore go into the OSSRH snapshot repo,
+#    be published as version "3.2.0-RC1-SNAPSHOT" and will therefore go into the OSS Sonatype snapshot repo,
 #    not Maven Central.
 #
 semver_regex='^v?([0-9]+\.[0-9]+\.[0-9]+(\-[0-9a-zA-Z.]+)*)$'
@@ -60,8 +68,8 @@ mvn \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
-  -DaltReleaseDeploymentRepository=maven-central::https://oss.sonatype.org/service/local/staging/deploy/maven2/ \
-  -DaltSnapshotDeploymentRepository=maven-central::https://oss.sonatype.org/content/repositories/snapshots/ \
+  -DaltReleaseDeploymentRepository=maven-central::$mvn_central_release_url \
+  -DaltSnapshotDeploymentRepository=maven-central::$mvn_central_snapshot_url \
   -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision  $mvn_profiles_active \
   $mvn_phase
 
