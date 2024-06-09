@@ -40,8 +40,7 @@ mvn \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
-  -Dchangelist=  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision \
-  "$mvn_profiles_active" \
+  -Dchangelist=  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision $mvn_profiles_active \
   $mvn_phase
 
 
