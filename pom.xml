@@ -40,6 +40,15 @@
   </developers>
 
 
+  <!-- This section not used in the deploy process, but is required to exist for
+       publishing to Maven Central.                                                -->
+  <scm>
+    <connection>scm:git:https://github.com/lbruun-net/maven-central-publish-example.git</connection>
+    <developerConnection>scm:git:https://github.com/lbruun-net/maven-central-publish-example.git</developerConnection>
+    <url>https://github.com/lbruun-net/maven-central-publish-example</url>
+  </scm>
+
+
 
   <build>
     <pluginManagement>
