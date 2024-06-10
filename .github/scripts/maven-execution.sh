@@ -39,6 +39,11 @@ semver_regex='^v?([0-9]+\.[0-9]+\.[0-9]+(\-[0-9a-zA-Z.]+)*)$'
 if [ "$GITHUB_REF_TYPE" = "tag" ]; then
   # Does tag look like a SemVer string?
   if [[ "$GITHUB_REF_NAME" =~ $semver_regex ]]; then
+    if [ "$GITHUB_EVENT_NAME" != "release" ]; then
+      echo "A SemVer-like tag, \"$GITHUB_REF_NAME\", was pushed to GitHub independently of the GitHub Releases feature."
+      echo "Releases must be created from the GitHub UI Releases page."
+      exit 1
+    fi
     semver=${BASH_REMATCH[1]}
     semver_prerelease=${BASH_REMATCH[2]}
 
@@ -57,9 +62,19 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
 
   else
     # Tagged with something not resembling a SemVer string.
-    # This may be a mistake. So we fail!
+    # This may be a mistake. But we accept it as there may be valid reasons for creating Git tags not related to
+    # versioning. However, at the very least the tag must not start with lower-case 'v' and then a digit.
     echo "Tag \"$GITHUB_REF_NAME\" is not SemVer"
-    exit 1
+    if [ "$GITHUB_EVENT_NAME" = "release" ]; then
+      echo "Tag \"$GITHUB_REF_NAME\" was created from the GitHub UI Releases page but has incorrect format. You should delete the release in the UI."
+      exit 1
+    else
+      if [[ "$GITHUB_REF_NAME" =~ ^v[0-9] ]]; then
+        echo "Tag \"$GITHUB_REF_NAME\" looks like a versioning tag, but not started from GitHub UI Releases page."
+        echo "The tag can easily be mistaken for a versioning tag and should be removed from git"
+        exit 1
+      fi
+    fi
   fi
 fi
 

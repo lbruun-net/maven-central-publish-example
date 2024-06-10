@@ -3,6 +3,9 @@ name: CI workflow
 
 on:
   push:
+    # Only on push of commits, not push of tags (we have 'release' for that)
+    branches:
+      - "*"
   pull_request:
   workflow_dispatch:
   release:
@@ -15,9 +18,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: To Be Removed
-        run: printenv
 
       - name: Set up Java and Maven
         uses: actions/setup-java@v4
