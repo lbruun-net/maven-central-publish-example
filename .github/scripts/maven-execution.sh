@@ -7,7 +7,10 @@
 #  'mvn verify' will be executed by default. However, if executing from a SemVer-like tag
 #  then 'mvn deploy' is executed instead.
 #
-
+#  IMPORTANT: The <version> element in the POM file must look like this:
+#    <version>${revision}${sha1}${changelist}</version>
+#
+#
 set -e
 
 
@@ -29,8 +32,8 @@ mvn_profiles_active=""
 # SemVer regular expression:
 #  - The tag can optionally start with the 'v' but the 'v' doesn't become part of
 #    the Maven version string.
-# -  We allow the X.Y.Z version to have a pre-release suffix, e.g. "3.2.0-RC1" but if
-#    so we tell Maven that this is a SNAPSHOT release. In other words: tag "3.2.0-RC1" will
+# -  We allow the X.Y.Z version to have a pre-release suffix, e.g. "3.2.0-RC1" but if so
+#    we tell Maven that this is a SNAPSHOT release. In other words: tag "3.2.0-RC1" will
 #    be published as version "3.2.0-RC1-SNAPSHOT" and will therefore go into the OSS Sonatype snapshot repo,
 #    not Maven Central.
 #
@@ -40,7 +43,7 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
   # Does tag look like a SemVer string?
   if [[ "$GITHUB_REF_NAME" =~ $semver_regex ]]; then
     if [ "$GITHUB_EVENT_NAME" != "release" ]; then
-      echo "A SemVer-like tag, \"$GITHUB_REF_NAME\", was pushed to GitHub independently of the GitHub Releases feature."
+      echo "ERROR: A SemVer-like tag, \"$GITHUB_REF_NAME\", was pushed to GitHub independently of the GitHub Releases feature."
       echo "Releases must be created from the GitHub UI Releases page."
       exit 1
     fi
@@ -54,7 +57,7 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
 
     # Test for pre-releases. We turn those into SNAPSHOTs
     if [ ! -z "$semver_prerelease" ]; then
-      # Unless "SNAPSHOT" is already the Semver Pre-release string, then..
+      # Unless "SNAPSHOT" is already in the Semver Pre-release string, then..
       if [[ ! "$semver_prerelease" =~ SNAPSHOT$ ]]; then
         mvn_ci_changelist="-SNAPSHOT"  # effectively, this gets appended to the complete Maven version string
       fi
@@ -63,15 +66,15 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
   else
     # Tagged with something not resembling a SemVer string.
     # This may be a mistake. But we accept it as there may be valid reasons for creating Git tags not related to
-    # versioning. However, at the very least the tag must not start with lower-case 'v' and then a digit.
+    # versioning. However, at the very least the tag must not start with lower-case 'v' followed by digit.
     echo "Tag \"$GITHUB_REF_NAME\" is not SemVer"
     if [ "$GITHUB_EVENT_NAME" = "release" ]; then
-      echo "Tag \"$GITHUB_REF_NAME\" was created from the GitHub UI Releases page but has incorrect format. You should delete the release in the UI."
+      echo "ERROR: Tag \"$GITHUB_REF_NAME\" was created from the GitHub UI Releases page but has incorrect format. You should delete the release in the UI."
       exit 1
     else
       if [[ "$GITHUB_REF_NAME" =~ ^v[0-9] ]]; then
-        echo "Tag \"$GITHUB_REF_NAME\" looks like a versioning tag, but not started from GitHub UI Releases page."
-        echo "The tag can easily be mistaken for a versioning tag and should be removed from git"
+        echo "ERROR: Tag \"$GITHUB_REF_NAME\" looks like a versioning tag, but not started from GitHub UI Releases page."
+        echo "The tag can easily be mistaken for a versioning tag and should be removed from git."
         exit 1
       fi
     fi

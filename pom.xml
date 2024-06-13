@@ -35,13 +35,12 @@
     <developer>
       <name>Lars Bruun-Hansen</name>
       <organization>lbruun.net</organization>
-      <organizationUrl>https://github.com/lbruun</organizationUrl>
+      <organizationUrl>https://github.com/lbruun-net</organizationUrl>
     </developer>
   </developers>
 
 
-  <!-- This section not used in the deploy/release process, but is required to exist for
-       publishing to Maven Central.                                                -->
+  <!-- This section not really used, but is required by Maven Central validation   -->
   <scm>
     <connection>scm:git:https://github.com/lbruun-net/maven-central-publish-example.git</connection>
     <developerConnection>scm:git:https://github.com/lbruun-net/maven-central-publish-example.git</developerConnection>
@@ -53,9 +52,9 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Maven prior to v3.9 uses version 2.x of the deploy plugin and after this use v3.x of the deploy plugin.
+        <!-- Maven prior to v3.9 by default uses version 2.x of the deploy-plugin and after this use v3.x of the deploy-plugin.
              We use the 'altReleaseDeploymentRepository' and 'altSnapshotDeploymentRepository' properties
-             so best to use v3.x of the plugin -->
+             so need to use v3.x of the plugin. If we are executing with Maven prior to v3.9 then we have to set this. -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>3.1.2</version>
