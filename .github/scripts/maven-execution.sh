@@ -52,11 +52,11 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
     mvn_ci_sha1_short=""
     mvn_profiles_active="-Prelease-to-central"
 
-    # Test for pre-releases. We turn those into SNAPSHOTs
+    # Test for SemVer pre-releases. We turn those into SNAPSHOTs
     if [ ! -z "$semver_prerelease" ]; then
       # Unless "SNAPSHOT" is already the Semver Pre-release string, then..
       if [[ ! "$semver_prerelease" =~ SNAPSHOT$ ]]; then
-        mvn_ci_changelist="-SNAPSHOT"  # effectively, this gets appended to the complete Maven version string
+        mvn_ci_changelist="-SNAPSHOT"  # effectively, this gets appended to the full Maven version string
       fi
     fi
 
