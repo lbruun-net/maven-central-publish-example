@@ -13,9 +13,13 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Some sensible defaults for local development -->
+
+    <!-- Some sensible defaults for local development.
+         These are only used when executing Maven locally.
+         The values have absolutely no significance.
+         Use whatever feels natural to you.                  -->
     <revision/>
-    <changelist>LATEST-SNAPSHOT</changelist> <!-- only used when executing Maven locally -->
+    <changelist>LATEST-SNAPSHOT</changelist>
     <sha1/>
   </properties>
 
@@ -40,7 +44,7 @@
   </developers>
 
 
-  <!-- This section not used in the deploy/release process, but is required to exist for
+  <!-- This section is not used in the deploy/release process, but is required to exist for
        publishing to Maven Central.                                                -->
   <scm>
     <connection>scm:git:https://github.com/lbruun-net/maven-central-publish-example.git</connection>
@@ -49,10 +53,15 @@
   </scm>
 
 
-
   <build>
     <pluginManagement>
       <plugins>
+
+        <!-- This POM uses the classic maven-deploy-plugin. We could alternatively use Sonatype's Staging Plugin
+             which can by-pass the UI action. When we use the classic maven-deploy-plugin it will be required (after
+             deployment has executed) to go into the Sonatype UI and release the artifact bundle.
+             Once you become confident with the workflow, you can switch to the Sonatype Staging plugin instead. -->
+
         <!-- Maven prior to v3.9 uses version 2.x of the deploy plugin and after this use v3.x of the deploy plugin.
              We use the 'altReleaseDeploymentRepository' and 'altSnapshotDeploymentRepository' properties
              so best to use v3.x of the plugin -->
@@ -64,6 +73,25 @@
     </pluginManagement>
 
     <plugins>
+      <!--  Javadoc here because we want to know early if there are errors in Javadoc generation.
+            In the standard Sonatype guidelines it is inside the 'release-to-central' profile
+            which means we will not discover Javadoc errors until we decide to release.
+            Instead, we pay the price of Javadoc generation on every commit: an acceptable tradeoff.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.2</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- The 'flatten-maven-plugin' is required because we use Maven CI Friendly feature.
            See https://maven.apache.org/maven-ci-friendly.html for more information.
            In Maven 4 we can finally get rid of this plugin.                                 -->
@@ -110,19 +138,6 @@
                 <id>attach-sources</id>
                 <goals>
                   <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.6.2</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
                 </goals>
               </execution>
             </executions>
