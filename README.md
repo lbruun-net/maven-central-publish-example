@@ -2,6 +2,8 @@
 
 
 Small and simple example of publishing to Maven Central the "native" way.
+It uses modern Maven (since Maven 3.5) where the use of the Maven Release Plugin is no longer
+necessary. Instead, a much simpler workflow can be accomplished. 
 
 I call this the "native" way because:
 
@@ -35,9 +37,10 @@ should be executed. Change it according to your needs and workflow.
 ### POM
 
 - Must be using the [Maven CI Friendly feature](https://maven.apache.org/maven-ci-friendly.html) and the version
-element must be `<version>${revision}${sha1}${changelist}</version>`. (IMO, all your projects should be using this paradigm)
+element must be `<version>${revision}${sha1}${changelist}</version>`. 
+(IMO, all your projects should be using the Maven CI Friendly paradigm)
 
-- Must have a profile named `release-to-central`. See the example in this repo.
+- Must have a profile named `release-to-central` and one named `ci`. See the example in this repo.
 
 
 ### GitHub Secrets

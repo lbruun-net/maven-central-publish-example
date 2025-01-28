@@ -24,7 +24,7 @@ mvn_phase="verify"
 mvn_ci_revision=""
 mvn_ci_sha1_short="${GITHUB_SHA::7}"
 mvn_ci_changelist=""
-mvn_profiles_active=""
+mvn_profiles_active="ci"
 
 # SemVer regular expression:
 #  - The tag can optionally start with the 'v' but the 'v' doesn't become part of
@@ -50,7 +50,7 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
     mvn_phase="deploy"
     mvn_ci_revision="$semver"
     mvn_ci_sha1_short=""
-    mvn_profiles_active="-Prelease-to-central"
+    mvn_profiles_active="${mvn_profiles_active},release-to-central"
 
     # Test for SemVer pre-releases. We turn those into SNAPSHOTs
     if [ ! -z "$semver_prerelease" ]; then
@@ -79,16 +79,20 @@ if [ "$GITHUB_REF_TYPE" = "tag" ]; then
 fi
 
 # Execute maven
+#
 #   - 'deployAtEnd':  For multi-module builds this is important. We either want to deploy
 #                     all modules or none. (i.e. the deploy should ideally be one atomic action)
+#
+#   - We expect a settings.xml file to exist which defines credentials for a Server named 'maven-central'
+#
 mvn \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
-  -DinstallAtEnd=true \
   -DdeployAtEnd=true \
   -DaltReleaseDeploymentRepository=maven-central::$mvn_central_release_url \
   -DaltSnapshotDeploymentRepository=maven-central::$mvn_central_snapshot_url \
-  -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision  $mvn_profiles_active \
+  -Dci.project.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+  -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision -P$mvn_profiles_active \
   $mvn_phase
 
