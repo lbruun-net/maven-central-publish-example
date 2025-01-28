@@ -158,7 +158,6 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <git-branch>${git.branch}</git-branch>
                   <git-commit-id>${git.commit.id.abbrev}</git-commit-id>
                   <project-url>${ci.project.url}</project-url>
                 </manifestEntries>
