@@ -85,6 +85,7 @@ fi
 #
 #   - We expect a settings.xml file to exist which defines credentials for a Server named 'maven-central'
 #
+set -x
 mvn \
   --show-version \
   --batch-mode \
@@ -93,6 +94,7 @@ mvn \
   -DaltReleaseDeploymentRepository=maven-central::$mvn_central_release_url \
   -DaltSnapshotDeploymentRepository=maven-central::$mvn_central_snapshot_url \
   -Dci.project.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
-  -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision -P$mvn_profiles_active \
+  -Dchangelist=$mvn_ci_changelist  -Dsha1=$mvn_ci_sha1_short  -Drevision=$mvn_ci_revision \
+  -P$mvn_profiles_active \
   $mvn_phase
 
