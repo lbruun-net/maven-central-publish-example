@@ -86,7 +86,7 @@ fi
 #   - We expect a settings.xml file to exist which defines credentials for a Server named 'maven-central'
 #
 set -x
-mvn \
+./mvnw \
   --show-version \
   --batch-mode \
   --no-transfer-progress \
